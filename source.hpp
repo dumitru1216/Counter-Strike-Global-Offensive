@@ -125,6 +125,11 @@ public:
 	int		anti_aim_fake_left_limit = 0;
 	int		anti_aim_fake_limit = 60;
 
+	bool anti_aim_fake_jittering = false;
+	int antiaim_file_jit_speed = 0;
+	int aa_fake_jit_min = 0;
+	int aa_fake_jit_max = 0;
+
 	int bullet_tracer_materials = 0;
 	bool slidewalk = false;
 
@@ -372,12 +377,14 @@ public:
 
 	c_keybind music_key = c_keybind{ 0, 1, false, 0 };
 
+	bool watermark = false;
 	bool	visuals_extra_windows[5] = { false, false,false,false,false };
 	int		visuals_spectators_alpha = 100;
 	Vector2D visuals_spectators_pos = Vector2D(200, 200);
 	int		visuals_keybinds_alpha = 100;
 	Vector2D visuals_keybinds_pos = Vector2D(200, 400);
-
+	int		watermark_alpha = 100;
+	Vector2D watermark_pos = Vector2D( 500, 200 );
 	bool	visuals_clantag = false;
 
 	float   colors_esp_ammo[4] = { 100, 100, 255, 230 };
@@ -394,7 +401,7 @@ public:
 
 	c_keybind anti_aim_autopeek_key = c_keybind{ 0, 0 , false, 0 };
 
-	int	anti_aim_at_target[4] = { false,false,false,false };
+	bool	anti_aim_at_target[4] = { false,false,false,false };
 
 	bool	misc_notifications[8] = { false,false,false,false, false,false, false,false };
 

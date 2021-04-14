@@ -51,7 +51,6 @@ bool IsVisible(Vector start, Vector end, C_BasePlayer* skip, C_BasePlayer* ent)
 
 	return trace.m_pEnt == ent;
 }
-
 void c_antiaimbot::get_targets()
 {
 	players.clear();
@@ -105,7 +104,6 @@ void c_antiaimbot::get_targets()
 
 	players.push_back(target);
 }
-
 void c_antiaimbot::run_at_target(float& yaw)
 {
 	auto GetFOV = [](const QAngle& view_angles, const Vector& start, const Vector& end) -> float {
@@ -200,7 +198,6 @@ void c_antiaimbot::run_at_target(float& yaw)
 	const auto angle = Math::CalcAngle(ctx.m_local()->GetEyePosition(), best_origin);
 	yaw = Math::normalize_angle(angle.y);
 }
-
 void c_antiaimbot::auto_direction() {
 	// constants.
 	static constexpr float STEP{ 4.f };
@@ -435,12 +432,6 @@ void c_antiaimbot::change_angles(CUserCmd* cmd, bool* send_packet)
 		|| ctx.m_settings.anti_aim_automatic_side[1] && (ctx.exploit_allowed && ctx.has_exploit_toggled && ctx.main_exploit != 0));
 
 	previous_hp = ctx.m_local()->m_iHealth();
-	
-	//if (old_shots != ctx.m_local()->m_iShotsFired())
-	//	old_shots = ctx.m_local()->m_iShotsFired();
-
-	//static int old_side = ctx.fside;
-	//static bool did_twist = false;
 	static bool force_choke = false;
 
 	//auto curtime = csgo.m_globals()->curtime;
@@ -458,91 +449,19 @@ void c_antiaimbot::change_angles(CUserCmd* cmd, bool* send_packet)
 		ctx.fside *= -1;
 
 	const auto new_max_delta = max_delta * (f_max_limit / 60.f);
-	//if (ctx.changed_fake_side)
-	//	old_side *= -1;
-
-	//if (is_moving && ctx.m_settings.anti_aim_automatic_side[1]) {
-	//	if (abs(Math::AngleDiff(ctx.angles[ANGLE_FAKE], ctx.angles[ANGLE_REAL])) <= 45.f/*just a quick test value*/&& ctx.m_settings.anti_aim_typeyfake == 2 && !ctx.start_switching && prev_side == ctx.fside) {
-	//		if (send_packet)
-	//			ctx.fside *= /*(cmd->command_number % 2 == 0 ? 1 : */-1/*)*/;
-
-	//		did_twist = true;
-	//	}
-	//	else {
-	//		if (!did_twist) {
-	//			old_side = ctx.fside;
-	//		}
-	//		else
-	//		{
-	//			ctx.fside = old_side;
-	//			did_twist = false;
-	//		}
-	//	}
-	//}
-
-	//if (ctx.m_settings.anti_aim_automatic_side[4] && ctx.m_local()->m_fFlags() & FL_ONGROUND)
-	//{
-	//	if (speed < 0.1f)
-	//	{
-	//		auto delta = Math::AngleDiff(ctx.m_local()->m_angEyeAngles().y, ctx.angles[ANGLE_FAKE]);
-
-	//		if (ctx.m_local()->get_animation_layer(3).m_flWeight == 0.0f && ctx.m_local()->get_animation_layer(6).m_flWeight <= 0.01f && ctx.m_local()->get_animation_layer(3).m_flCycle == 0.0f)
-	//			ctx.fside = (delta <= 0.f ? 1 : -1);
-	//	}
-	//	else if (int(ctx.m_local()->get_animation_layer(12).m_flWeight * 1000.f) == 0)
-	//	{
-	//		//2 = -1; 3 = 1; 1 = fake;
-	//		if (int(ctx.m_local()->get_animation_layer(6).m_flWeight * 1000.f) >= int(ctx.m_local()->get_animation_layer(6).m_flWeight * 1000.f))
-	//		{
-	//			float delta1 = abs(ctx.m_local()->get_animation_layer(6).m_flPlaybackRate - ctx.local_layers[2][6].m_flPlaybackRate);
-	//			float delta2 = abs(ctx.m_local()->get_animation_layer(6).m_flPlaybackRate - ctx.local_layers[0][6].m_flPlaybackRate);
-	//			float delta3 = abs(ctx.m_local()->get_animation_layer(6).m_flPlaybackRate - ctx.local_layers[1][6].m_flPlaybackRate);
-
-	//			if (delta1 < delta3 || delta2 <= delta3 || int(delta3 * 1000.0f) != 0) {
-	//				if (delta1 >= delta2 && delta3 > delta2 && int(delta2 * 1000.0f) == 0)
-	//					ctx.fside = -1;
-	//			}
-	//			else
-	//				ctx.fside = 1;
-	//		}
-	//	}
-	//}
-	
 	RandomSeed(cmd->command_number & 255);
 
-	/*static float last_random_body_lean_mult = 0.f;
+	static float last_random_body_lean_mult = 0.f;
 	static float last_random_body_lean_time = 0.f;
 
 	if (ctx.m_settings.anti_aim_fake_jittering) {
-		if (fabs(last_random_body_lean_time - csgo.m_globals()->realtime) > (0.5f - (ctx.m_settings.anti_aim_fake_jittering_speed * 0.05f))) {
-			last_random_body_lean_mult = RandomFloat(ctx.m_settings.anti_aim_fake_jittering_min, ctx.m_settings.anti_aim_fake_jittering_max) * 0.01f;
+		if (fabs(last_random_body_lean_time - csgo.m_globals()->realtime) > (0.5f - (ctx.m_settings.antiaim_file_jit_speed * 0.05f))) {
+			last_random_body_lean_mult = RandomFloat(ctx.m_settings.aa_fake_jit_min, ctx.m_settings.aa_fake_jit_max) * 0.01f;
 			last_random_body_lean_time = csgo.m_globals()->realtime;
 		}
 
 		max_delta *= last_random_body_lean_mult;
-	}*/
-
-	/*if (ctx.m_settings.anti_aim_fake_jittering && ctx.m_settings.anti_aim_typeyfake == 2)
-	{
-		if (ctx.m_local()->m_vecVelocity().Length2D() < 40) {
-			if (ctx.changed_fake_side)
-				old_side *= -1;
-
-			ctx.fside *= -1;
-			did_twist = true;
-		}
-		else
-		{
-			if (!did_twist) {
-				old_side = ctx.fside;
-			}
-			else
-			{
-				ctx.fside = old_side;
-				did_twist = false;
-			}
-		}
-	}*/
+	}
 
 	if (aa_switch > 0 && (*send_packet))
 	{
@@ -552,12 +471,9 @@ void c_antiaimbot::change_angles(CUserCmd* cmd, bool* send_packet)
 
 		if (aa_switch == 1)
 		{
-			//cmd->viewangles.y += last_switch_ang < 0.f ? (abs(aa_switchang) / 2.f) : -(abs(aa_switchang) / 2.f);
-
-			if (/*fabs(last_switch_time - csgo.m_globals()->realtime) > (1.f - (aa_switchspeed * 0.01f)) && */*send_packet) {
+			if (*send_packet) {
 				auto lol = abs(aa_switchang);
 				lmao = !lmao;
-				//RandomSeed(cmd->command_number & 255);
 				last_switch_ang = (lmao ? (-lol / 2) : (lol / 2));
 				last_switch_time = csgo.m_globals()->realtime;
 			}
@@ -629,20 +545,14 @@ void c_antiaimbot::change_angles(CUserCmd* cmd, bool* send_packet)
 				last_real_angle.y += new_max_delta / 2.f;
 		}
 
-		//if (ctx.m_settings.aimbot_position_adjustment_old)
-		//	last_real_angle.y = Math::normalize_angle(last_real_angle.y - 180.f);
-
-		if (*send_packet)// || !send_packet && ctx.m_settings.aimbot_position_adjustment_old)
+		if (*send_packet)
 		{
 			if (is_inverted)
 				cmd->viewangles.y = Math::normalize_angle(last_real_angle.y + new_max_delta);
 			else
 				cmd->viewangles.y = Math::normalize_angle(last_real_angle.y - new_max_delta);
-
-			//if (ctx.m_settings.aimbot_position_adjustment_old)
-			//	cmd->viewangles.y = Math::normalize_angle(last_real_angle.y - 180.f + RandomFloat(-30.f, 30.f));
 		}
-		else //if (!ctx.m_settings.aimbot_position_adjustment_old)
+		else
 		{
 			if (is_inverted)
 				cmd->viewangles.y = Math::normalize_angle(last_real_angle.y - new_max_delta);
@@ -652,28 +562,28 @@ void c_antiaimbot::change_angles(CUserCmd* cmd, bool* send_packet)
 	}
 	else if (aa_ftype == 2)
 	{
-		static bool invert_jitter = false;
-
-		if (invert_jitter) {
-			cmd->viewangles.y = last_real_angle.y + 180.0f;
-			last_real_angle.y = Math::normalize_angle(cmd->viewangles.y);
-		}
-
-		if (*send_packet) {
-			invert_jitter = !invert_jitter;
-
-			if (!invert_jitter)
-				cmd->viewangles.y = Math::normalize_angle(last_real_angle.y + (new_max_delta * 0.5f) * ctx.fside);
+		if ( !ctx.m_settings.aimbot_position_adjustment_old )
+		{
+			if ( is_inverted )
+				last_real_angle.y += new_max_delta / 2.f;
 			else
-				cmd->viewangles.y = Math::normalize_angle(last_real_angle.y - (new_max_delta * 0.5f) * ctx.fside);
-		}
-		else /*if (!flick_lby)*/ {
-			if (invert_jitter)
-				cmd->viewangles.y = Math::normalize_angle(last_real_angle.y - (new_max_delta + 5.0f) * ctx.fside);
-			else
-				cmd->viewangles.y = Math::normalize_angle(last_real_angle.y + (new_max_delta + 5.0f) * ctx.fside);
+				last_real_angle.y += new_max_delta / 2.f;
 		}
 
+		if ( *send_packet )
+		{
+			if ( is_inverted )
+				cmd->viewangles.y = Math::normalize_angle( last_real_angle.y + new_max_delta );
+			else
+				cmd->viewangles.y = Math::normalize_angle( last_real_angle.y + new_max_delta );
+		}
+		else
+		{
+			if ( is_inverted )
+				cmd->viewangles.y = Math::normalize_angle( last_real_angle.y + new_max_delta );
+			else
+				cmd->viewangles.y = Math::normalize_angle( last_real_angle.y + new_max_delta );
+		}
 	}
 	else if (aa_ftype == 3)
 	{
@@ -775,7 +685,6 @@ void c_antiaimbot::change_angles(CUserCmd* cmd, bool* send_packet)
 #ifdef VIRTUALIZER
 #endif // VIRTUALIZER
 }
-
 bool c_antiaimbot::peek_fake_lag(CUserCmd* cmd, bool* send_packet)
 {
 	auto choked = 15;
@@ -804,10 +713,6 @@ bool c_antiaimbot::peek_fake_lag(CUserCmd* cmd, bool* send_packet)
 
 	float tempz = ((vecDuckViewOffset.z - fMore) * duckFraction) +
 		(vecStandViewOffset.z * (1 - duckFraction));
-
-	/*
-	csgo.m_engine()->GetViewAngles(ang);
-	*/
 
 	Vector direction;
 	Math::AngleVectors(Engine::Movement::Instance()->m_qRealAngles, &direction);
@@ -980,8 +885,7 @@ void c_antiaimbot::fake_lag(CUserCmd* cmd, bool* send_packet)
 		if (is_onground && pre_prediction_speed > post_prediction_speed && post_prediction_speed > 2.f
 			|| is_onground && ctx.m_local()->get_animation_layers_count() > 6 && max(pre_prediction_speed, post_prediction_speed) > 5 && ctx.m_local()->get_animation_layer(6).m_flPlaybackRate < 0.1f
 			|| ctx.can_aimbot && !m_weapon()->can_shoot()
-			|| (cmd->buttons & IN_JUMP || !(Engine::Prediction::Instance()->GetFlags() & FL_ONGROUND && ctx.m_local()->m_fFlags() & FL_ONGROUND))
-			/*|| currently_ducked != ducked && !currently_ducked && ctx.m_local()->m_flDuckAmount() > 0.f*/)
+			|| (cmd->buttons & IN_JUMP || !(Engine::Prediction::Instance()->GetFlags() & FL_ONGROUND && ctx.m_local()->m_fFlags() & FL_ONGROUND)) )
 			lag_timer = csgo.m_globals()->realtime + TICKS_TO_TIME(17);
 
 		//const auto new_delta = max_delta;
@@ -1239,6 +1143,38 @@ void c_antiaimbot::fake_lagv2(CUserCmd* cmd, bool* send_packet)
 #endif // VIRTUALIZER
 }
 
+inline float FastSqrt222( float x )
+{
+	unsigned int i = *( unsigned int* )&x;
+	i += 127 << 23;
+	i >>= 1;
+	return *( float* )&i;
+}
+#define square( x ) ( x * x )
+void ClampMovement( CUserCmd* pCommand, float fMaxSpeed )
+{
+	if ( fMaxSpeed <= 0.f )
+		return;
+	float fSpeed = ( float )( FastSqrt222( square( pCommand->forwardmove ) + square( pCommand->sidemove ) + square( pCommand->upmove ) ) );
+	if ( fSpeed <= 0.f )
+		return;
+	if ( pCommand->buttons & IN_DUCK )
+		fMaxSpeed *= 2.94117647f;
+	if ( fSpeed <= fMaxSpeed )
+		return;
+	float fRatio = fMaxSpeed / fSpeed;
+	pCommand->forwardmove *= fRatio;
+	pCommand->sidemove *= fRatio;
+	pCommand->upmove *= fRatio;
+}
+
+void slowwalk( CUserCmd* cmd ) {
+	if ( cmd ) {
+		if ( GetAsyncKeyState( VK_SHIFT ) )
+			if ( ctx.m_local()->m_fFlags( ) & FL_ONGROUND )
+				ClampMovement( cmd, 15 * 2 );
+	}
+}
 
 void c_antiaimbot::work(CUserCmd* cmd, bool* send_packet)
 {
@@ -1249,10 +1185,10 @@ void c_antiaimbot::work(CUserCmd* cmd, bool* send_packet)
 
 #endif // VIRTUALIZER
 
-	/*auto pressed_move_key = (cmd->buttons & IN_MOVELEFT
+	auto pressed_move_key = (cmd->buttons & IN_MOVELEFT
 		|| cmd->buttons & IN_MOVERIGHT
 		|| cmd->buttons & IN_BACK
-		|| cmd->buttons & IN_FORWARD);*/
+		|| cmd->buttons & IN_FORWARD);
 
 	if (ctx.m_settings.anti_aim_enabled && m_weapon()->m_reloadState() == 0/*!(cmd->buttons & (IN_ATTACK | IN_ATTACK2 | IN_MOVERIGHT | IN_MOVELEFT | IN_USE | IN_BACK | IN_FORWARD | IN_JUMP))*/
 		&& sqrtf((cmd->forwardmove * cmd->forwardmove) + (cmd->sidemove * cmd->sidemove)) < 0.1f)
@@ -1271,53 +1207,7 @@ void c_antiaimbot::work(CUserCmd* cmd, bool* send_packet)
 		}
 	}
 
-	//if (/*!pressed_move_key &&*/ move_speed <= 0.1f && vel_speed <= 0.1f 
-	//	&& ctx.m_local()->m_fFlags() & FL_ONGROUND && Engine::Prediction::Instance()->GetFlags() & FL_ONGROUND 
-	//	&& (ctx.m_settings.anti_aim_typelby == 1 || ctx.m_settings.anti_aim_typelby == 0 && ctx.main_exploit > 0 && ctx.has_exploit_toggled && ctx.exploit_allowed))
-	//{
-	//	const auto duck_amnt = ctx.m_local()->m_flDuckAmount();
-	//	float duck_amnt2;
-	//	const auto in_duck_button = (cmd->buttons & IN_DUCK);
-
-	//	if (in_duck_button || ctx.fakeducking)
-	//		duck_amnt2 = fminf(1.0f, ((csgzo.m_globals()->interval_per_tick * 0.8f) * ctx.m_local()->m_flDuckSpeed()) + duck_amnt);
-	//	else
-	//		duck_amnt2 = fmaxf(0.0f, duck_amnt - (fmaxf(1.5f, ctx.m_local()->m_flDuckSpeed()) * csgo.m_globals()->interval_per_tick));
-
-	//	if (!(cmd->command_number & 1))
-	//		cmd->forwardmove = -(ctx.m_local()->m_vecViewOffset().z < 64.f ? 3.f * duck_amnt2 : 1.01f);
-	//	else
-	//		cmd->forwardmove = (ctx.m_local()->m_vecViewOffset().z < 64.f ? 3.f * duck_amnt2 : 1.01f);
-
-	//	/*static float old_forwardmove = 1.01f;
-
-	//	auto newforwardmove = old_forwardmove;
-	//	auto duck_amnt = ctx.m_local()->m_flDuckAmount();
-	//	float duck_amnt2 = 0.f;
-	//	auto in_duck_button = (cmd->buttons & IN_DUCK);
-
-	//	if (in_duck_button)
-	//		duck_amnt2 = fminf(1.0f, ((csgo.m_globals()->interval_per_tick * 0.8f) * ctx.m_local()->m_flDuckSpeed()) + duck_amnt);
-	//	else
-	//		duck_amnt2 = fmaxf(0.0f, duck_amnt - (fmaxf(1.5f, ctx.m_local()->m_flDuckSpeed()) * csgo.m_globals()->interval_per_tick));
-
-	//	if (in_duck_button || ctx.m_local()->m_bDucked() || ctx.m_local()->m_fFlags() & 2)
-	//		newforwardmove = newforwardmove / (((duck_amnt2 * 0.34f) + 1.0f) - duck_amnt2);
-
-	//	old_forwardmove *= -1.f;
-
-	//	auto old_move = cmd->forwardmove;
-
-	//	if (old_move != 0.0f)
-	//	{
-	//		if (old_move >= 0.0f)
-	//			newforwardmove = newforwardmove + old_move;
-	//		else
-	//			newforwardmove = old_move - newforwardmove;
-	//	}
-
-	//	cmd->forwardmove = newforwardmove;*/
-	//}
+	slowwalk( cmd );
 
 	if (ctx.fside == 0)
 		previous_side = ctx.fside = 1;

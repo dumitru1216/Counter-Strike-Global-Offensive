@@ -26,7 +26,7 @@ void Drawing::CreateFonts()
 	LastFontName = "Segoe UI"; //yes
 	csgo.m_surface()->SetFontGlyphSet(F::Menu = csgo.m_surface()->CreateFont_(), sxor("Segoe UI"), 13, 400, NULL, NULL, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS);//sxor("Visitor_Rus"), 12, 400, NULL, NULL, FONTFLAG_DROPSHADOW);
 	LastFontName = "Lucida Console"; //yes
-	csgo.m_surface()->SetFontGlyphSet(F::ESP = csgo.m_surface()->CreateFont_(), sxor( "Lucida Console" ), 10, NULL, NULL, NULL, FONTFLAG_DROPSHADOW ); // supremacy esp
+	csgo.m_surface()->SetFontGlyphSet(F::ESP = csgo.m_surface()->CreateFont_(), sxor( "Lucida Console" ), 10, NULL, NULL, NULL, FONTFLAG_DROPSHADOW | FONTFLAG_ANTIALIAS ); // supremacy esp
 	csgo.m_surface()->SetFontGlyphSet(F::MenuV2n = csgo.m_surface()->CreateFont_(), sxor("Tahoma"), 12, 500, NULL, NULL, 0); // supremacy
 	LastFontName = "Verdana"; //yes
 	csgo.m_surface()->SetFontGlyphSet(F::LBY = csgo.m_surface()->CreateFont_(), sxor("Verdana"), 26, 700, NULL, NULL, 144);

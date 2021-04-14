@@ -860,8 +860,8 @@ namespace menu
 								ImGui::SliderInt( sxor( "Autowall Mindmg" ), &ctx.m_settings.aimbot_min_damage, 0, 101 );
 								ImGui::Spacing( );
 							}
-							ImGui::Checkbox( sxor( "Quick stop" ), &ctx.m_settings.aimbot_autostop );
-							ImGui::Checkbox( sxor( "Between shoots" ), &ctx.m_settings.autostop_only_when_shooting );
+							ImGui::Checkbox( sxor( "Quick Stop" ), &ctx.m_settings.aimbot_autostop );
+							ImGui::Checkbox( sxor( "Between Shoots" ), &ctx.m_settings.autostop_only_when_shooting );
 							ImGui::Checkbox( sxor( "Force Accuracy" ), &ctx.m_settings.autostop_force_accuracy );
 							ImGui::Combo( "##autostop", &ctx.m_settings.autostop_type, "Slow motion\0Full Stop\0" );
 							ImGui::Text( "Doubletap ( toggle )" );
@@ -877,21 +877,25 @@ namespace menu
 						ImGui::SameLine( );
 						ImGui::BeginChild( "###rage2", ImVec2( 250, 365 / 2 ), true ); {
 							ImGui::Checkbox( sxor( "Anti-Aim" ), &ctx.m_settings.anti_aim_enabled );
-							ImGui::Text( "Pitch" );
-							ImGui::Combo( "##typexAA", &ctx.m_settings.anti_aim_typex, "Off\0Down\0" );
-							ImGui::Text( "Yaw" );
-							ImGui::Combo( "##typeyAA", &ctx.m_settings.anti_aim_typey, "Off\0Back\0View\0Spin\0" );
-							ImGui::Text( "Yaw Jitter" );
-							ImGui::Combo( "##YawdJitter", &ctx.m_settings.anti_aim_jittering_type, "Off\0Random\0Static\0" );
-							if ( ctx.m_settings.anti_aim_jittering_type != 0 )
-								ImGui::SliderInt( "##jittering", &ctx.m_settings.anti_aim_jittering, -90, 90 );
-							ImGui::Text( "Desync Type" );
-							ImGui::Combo( "##typeyFAA", &ctx.m_settings.anti_aim_typeyfake, "Off\0Static\0Jitter\0Tank\0" );
+							//ImGui::Checkbox( sxor( "Position Adjustment" ), &ctx.m_settings.aimbot_position_adjustment_old );
+							ImGui::Combo( "Pitch", &ctx.m_settings.anti_aim_typex, "Off\0Emotion\0" );
+							ImGui::Combo( "Yaw", &ctx.m_settings.anti_aim_typey, "Off\0Back\0View\0Spin\0" );
+							ImGui::Combo( "Fake Type", &ctx.m_settings.anti_aim_typeyfake, "Off\0Static\0Static Angle\0Electro\0" );
 							if ( ctx.m_settings.anti_aim_typeyfake != 0 )
 								ImGui::SliderInt( "", &ctx.m_settings.anti_aim_fake_limit, -60, 60 );
-							ImGui::Text( "Invert Anti-Aim" );
+							ImGui::Text( "Invert Desync side" );
 							ImGui::SameLine( );
-							ImGui::Bind( "##fakesidekey", &ctx.m_settings.anti_aim_fake_switch.key, ImVec2( 80, 20 ) );
+							ImGui::Bind( "###switch", &ctx.m_settings.anti_aim_fake_switch.key, ImVec2( 80, 20 ) );
+							ImGui::Checkbox( sxor( "At Targets" ), &ctx.m_settings.anti_aim_at_target[ 0 ] );
+							if ( ctx.m_settings.anti_aim_at_target[ 0 ] ) {
+								ImGui::Checkbox( sxor( "At Targets ( low distance )" ), &ctx.m_settings.anti_aim_at_target[ 1 ] );
+							}
+							ImGui::Checkbox( sxor( "Anti-Aim Fake Jittering" ), &ctx.m_settings.anti_aim_fake_jittering );
+							if ( ctx.m_settings.anti_aim_fake_jittering ) {
+								ImGui::SliderInt( "Fake-Jitter Speed", &ctx.m_settings.antiaim_file_jit_speed, 0, 100 );
+								ImGui::SliderInt( "Fake-Jitter Min", &ctx.m_settings.aa_fake_jit_min, 0, 60 );
+								ImGui::SliderInt( "Fake-Jitter Max", &ctx.m_settings.aa_fake_jit_max, 0, 60 );
+							}
 							ImGui::Checkbox( sxor( "Slidewalk" ), &ctx.m_settings.slidewalk );
 						} ImGui::EndChild( );
 						ImGui::SetCursorPos( ImVec2( 8, 365 / 2 + 15 ) );
@@ -948,6 +952,7 @@ namespace menu
 							ImGui::SliderInt( "##fakelagval", &ctx.m_settings.fake_lag_value, 0, 15 );
 							ImGui::Spacing( );
 							ImGui::Checkbox( sxor( "Choke while shooting" ), &ctx.m_settings.fake_lag_shooting );
+							ImGui::Checkbox( sxor( "Prediction when lischeck" ), &ctx.m_settings.fake_lag_special );
 						} ImGui::EndChild( );
 					} break;
 					case 2: {
@@ -981,6 +986,7 @@ namespace menu
 							ImGui::Checkbox( "Flags ( armor )", &ctx.m_settings.esp_flags[ 0 ] );
 							ImGui::Checkbox( "Flags ( scoped )", &ctx.m_settings.esp_flags[ 2 ] );
 
+							ImGui::Checkbox( "Watermark", &ctx.m_settings.watermark );
 							ImGui::Checkbox( "Spectators", &ctx.m_settings.visuals_extra_windows[ 0 ] );
 							ImGui::Checkbox( "Keybinds", &ctx.m_settings.visuals_extra_windows[ 1 ] );
 						} ImGui::EndChild( );

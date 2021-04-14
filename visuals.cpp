@@ -699,20 +699,22 @@ void DECLSPEC_NOINLINE c_visuals::render(bool reset)
 		}
 	}
 
-
-
 	indicators_count = 0;
+
+	if ( ctx.m_settings.watermark && ctx.screen_size.x > 0.0 && ctx.screen_size.y > 0.0 ) {
+		Drawing::DrawRect( ctx.screen_size.x - 196, 10, 190, 18, Color( 35, 35, 35, 150 ) );
+		Drawing::DrawRect( ctx.screen_size.x - 196, 10, 190, 2.0f, ctx.flt2color( ctx.m_settings.f_menu_color ) );
+		Drawing::DrawRectGradientVertical( ctx.screen_size.x - 196, 10, 2.0f, 18, ctx.flt2color( ctx.m_settings.f_menu_color ), Color( 35, 35, 35, 100 ) );
+		Drawing::DrawRectGradientVertical( ctx.screen_size.x - 8, 10, 2.0f, 18, ctx.flt2color( ctx.m_settings.f_menu_color ), Color( 35, 35, 35, 100 ) );
+		Drawing::DrawString( F::ESP, ctx.screen_size.x - 100, 15, Color( 255.0, 255.0, 255.0, 255.0 ), FONT_CENTER, sxor( "developer | deathhole [ beta ]" ) );
+	}
 
 	if (ctx.m_settings.visuals_extra_windows[0] && ctx.screen_size.x > 0.0 && ctx.screen_size.y > 0.0)
 	{
 		static double prev_alpha = 0;
-
 		auto spectators = 1;
-
 		static auto d = Drawing::GetTextSize(F::ESP, "H");
-
 		static auto lol = get_spectators();
-
 		static auto tick = csgo.m_globals()->tickcount;
 
 		if (tick != csgo.m_globals()->tickcount) {
@@ -746,11 +748,11 @@ void DECLSPEC_NOINLINE c_visuals::render(bool reset)
 
 		Drawing::DrawRect		(ctx.m_settings.visuals_spectators_pos.x, ctx.m_settings.visuals_spectators_pos.y + 1.0, spectator_size.x, spectator_size.y + 2.0, Color(35, 35, 35, prev_alpha * float(ctx.m_settings.visuals_spectators_alpha / 130.0)));
 		Drawing::DrawOutlinedRect(ctx.m_settings.visuals_spectators_pos.x - 1.0, ctx.m_settings.visuals_spectators_pos.y, spectator_size.x + 2.0, spectator_size.y + 4.0, Color(10, 10, 10, prev_alpha * float(ctx.m_settings.visuals_spectators_alpha / 130.0)));
-		Drawing::DrawRect		(ctx.m_settings.visuals_spectators_pos.x - 1.0, ctx.m_settings.visuals_spectators_pos.y, spectator_size.x + 2.0, 2.0, ctx.m_settings.menu_color.alpha(prev_alpha * float(ctx.m_settings.visuals_spectators_alpha / 100.f)));
+		Drawing::DrawRect		(ctx.m_settings.visuals_spectators_pos.x - 1.0, ctx.m_settings.visuals_spectators_pos.y, spectator_size.x + 2.0, 2.0, ctx.flt2color( ctx.m_settings.f_menu_color ).alpha(prev_alpha * float(ctx.m_settings.visuals_spectators_alpha / 100.f)));
 		Drawing::DrawString(F::ESP, ctx.m_settings.visuals_spectators_pos.x + spectator_size.x / 2.0, ctx.m_settings.visuals_spectators_pos.y + 3.0, Color(255.0, 255.0, 255.0, prev_alpha * float(ctx.m_settings.visuals_spectators_alpha / 100.f)), FONT_CENTER, "%s [%d]", sxor("spectators"), (int)lol.size());
 
-		Drawing::DrawRectGradientHorizontal(ctx.m_settings.visuals_spectators_pos.x, ctx.m_settings.visuals_spectators_pos.y + (d.bottom + 4.0), spectator_size.x / 2, 2.0, Color(35, 35, 35, 0), ctx.m_settings.menu_color.alpha(prev_alpha* double(ctx.m_settings.visuals_spectators_alpha / 130.0)));
-		Drawing::DrawRectGradientHorizontal(ctx.m_settings.visuals_spectators_pos.x + spectator_size.x / 2, ctx.m_settings.visuals_spectators_pos.y + (d.bottom + 4.0), spectator_size.x / 2 - 1.0, 2.0, ctx.m_settings.menu_color.alpha(prev_alpha * double(ctx.m_settings.visuals_spectators_alpha / 130.0)), Color(35, 35, 35, 0));
+		Drawing::DrawRectGradientHorizontal( ctx.m_settings.visuals_spectators_pos.x, ctx.m_settings.visuals_spectators_pos.y + ( d.bottom + 4.0 ), spectator_size.x / 2, 2.0, Color( 35, 35, 35, prev_alpha * double( ctx.m_settings.visuals_spectators_alpha / 130.0 ) ), ctx.flt2color( ctx.m_settings.f_menu_color ).alpha( prev_alpha * double( ctx.m_settings.visuals_spectators_alpha / 130.0 ) ) );
+		Drawing::DrawRectGradientHorizontal( ctx.m_settings.visuals_spectators_pos.x + spectator_size.x / 2, ctx.m_settings.visuals_spectators_pos.y + ( d.bottom + 4.0 ), spectator_size.x / 2 - 1.0, 2.0, ctx.flt2color( ctx.m_settings.f_menu_color ).alpha( prev_alpha * double( ctx.m_settings.visuals_spectators_alpha / 130.0 ) ), Color( 35, 35, 35, prev_alpha * double( ctx.m_settings.visuals_spectators_alpha / 130.0 ) ) );
 
 		if (!lol.empty())
 		{
@@ -845,11 +847,11 @@ void DECLSPEC_NOINLINE c_visuals::render(bool reset)
 		if (ctx.m_settings.visuals_keybinds_alpha > 2) {
 			Drawing::DrawRect(ctx.m_settings.visuals_keybinds_pos.x, ctx.m_settings.visuals_keybinds_pos.y + 1.0, spectator_size.x, spectator_size.y + 2.0, Color(35, 35, 35, prev_alpha * float(ctx.m_settings.visuals_keybinds_alpha / 130.0)));
 			Drawing::DrawOutlinedRect(ctx.m_settings.visuals_keybinds_pos.x - 1.0, ctx.m_settings.visuals_keybinds_pos.y, spectator_size.x + 2.0, spectator_size.y + 4.0, Color(10, 10, 10, prev_alpha * float(ctx.m_settings.visuals_keybinds_alpha / 130.0)));
-			Drawing::DrawRect(ctx.m_settings.visuals_keybinds_pos.x - 1.0, ctx.m_settings.visuals_keybinds_pos.y, spectator_size.x + 2.0, 2, ctx.m_settings.menu_color.alpha(prev_alpha * float(ctx.m_settings.visuals_keybinds_alpha / 100.0)));
+			Drawing::DrawRect(ctx.m_settings.visuals_keybinds_pos.x - 1.0, ctx.m_settings.visuals_keybinds_pos.y, spectator_size.x + 2.0, 2, ctx.flt2color( ctx.m_settings.f_menu_color ).alpha(prev_alpha * float(ctx.m_settings.visuals_keybinds_alpha / 100.0)));
 			Drawing::DrawString(F::ESP, ctx.m_settings.visuals_keybinds_pos.x + spectator_size.x / 2.0, ctx.m_settings.visuals_keybinds_pos.y + 3.0, Color(255.0, 255.0, 255.0, prev_alpha * float(ctx.m_settings.visuals_keybinds_alpha / 100.0)), FONT_CENTER, sxor("active keys"));
 
-			Drawing::DrawRectGradientHorizontal(ctx.m_settings.visuals_keybinds_pos.x, ctx.m_settings.visuals_keybinds_pos.y + (d.bottom + 4.0), spectator_size.x / 2, 2.0, Color(35, 35, 35, 0), ctx.m_settings.menu_color.alpha(prev_alpha * float(ctx.m_settings.visuals_keybinds_alpha / 130.0)));
-			Drawing::DrawRectGradientHorizontal(ctx.m_settings.visuals_keybinds_pos.x + spectator_size.x / 2, ctx.m_settings.visuals_keybinds_pos.y + (d.bottom + 4.0), spectator_size.x / 2 - 1.0, 2.0, ctx.m_settings.menu_color.alpha(prev_alpha * float(ctx.m_settings.visuals_keybinds_alpha / 130.0)), Color(35, 35, 35, 0));
+			Drawing::DrawRectGradientHorizontal(ctx.m_settings.visuals_keybinds_pos.x, ctx.m_settings.visuals_keybinds_pos.y + (d.bottom + 4.0), spectator_size.x / 2, 2.0, Color( 35, 35, 35, prev_alpha* double( ctx.m_settings.visuals_spectators_alpha / 130.0 ) ), ctx.flt2color( ctx.m_settings.f_menu_color ).alpha(prev_alpha * float(ctx.m_settings.visuals_keybinds_alpha / 130.0)));
+			Drawing::DrawRectGradientHorizontal(ctx.m_settings.visuals_keybinds_pos.x + spectator_size.x / 2, ctx.m_settings.visuals_keybinds_pos.y + (d.bottom + 4.0), spectator_size.x / 2 - 1.0, 2.0, ctx.flt2color( ctx.m_settings.f_menu_color ).alpha( prev_alpha* double( ctx.m_settings.visuals_spectators_alpha / 130.0 ) ), Color( 35, 35, 35, prev_alpha* double( ctx.m_settings.visuals_spectators_alpha / 130.0 ) ) );
 		}
 
 		if (working_keybinds > 0)
@@ -978,13 +980,13 @@ void DECLSPEC_NOINLINE c_visuals::render(bool reset)
 					if (draw_factor < 0)
 						draw_factor = 0;
 				}
-					const auto text_size = Drawing::GetTextSize(F::LBY, ctx.main_exploit == 1 ? sxor("ONSHOT") : sxor("DT"));
+					const auto text_size = Drawing::GetTextSize(F::LBY, ctx.main_exploit == 1 ? sxor("HS") : sxor("DT"));
 					Drawing::DrawString(F::LBY,
 						10,
 						ctx.screen_size.y - 88 - 26 * indicators_count,
 						Color(30, 30, 30, csgo.m_client()->IsChatRaised() ? 5 : 250),
 						FONT_LEFT,
-						ctx.main_exploit == 1 ? sxor("ONSHOT") : sxor("DT"));
+						ctx.main_exploit == 1 ? sxor("HS") : sxor("DT"));
 
 					*reinterpret_cast<bool*>(uintptr_t(csgo.m_surface()) + 0x280) = true;
 					int x, y, x1, y1;
@@ -995,7 +997,7 @@ void DECLSPEC_NOINLINE c_visuals::render(bool reset)
 						ctx.screen_size.y - 88 - 26 * indicators_count++,
 						ctx.ticks_allowed > 13 && !ctx.fakeducking && ctx.exploit_allowed ? Color(123, 194, 21, csgo.m_client()->IsChatRaised() ? 5 : 250) : Color::Red(csgo.m_client()->IsChatRaised() ? 5 : 250),
 						FONT_LEFT,
-						ctx.main_exploit == 1 ? sxor("ONSHOT") : sxor("DT"));
+						ctx.main_exploit == 1 ? sxor("HS") : sxor("DT"));
 					Drawing::LimitDrawingArea(x, y, x1, y1);
 					*reinterpret_cast<bool*>(uintptr_t(csgo.m_surface()) + 0x280) = false;
 				
